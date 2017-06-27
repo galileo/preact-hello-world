@@ -19,19 +19,21 @@ class App extends Component {
             .then(res => res.json())
             .then(({name, avatar_url}) => ({ name, image: avatar_url }))
             .then(user => {
-                this.setState({
-                    user,
-                    loading: false
-                })
+                setTimeout( () => {
+                    this.setState({
+                        user,
+                        loading: false
+                    })
+                }, 2000)
             })
             .catch(err => console.error(err))
     }
 
-    render() {
-        return this.state.loading
-        ? <p>Loading, please wait ...</p>
+    render({config}, {loading, user}) {
+        return loading
+        ? <p>Loading, please wait ... Fetching {config.urls.user}</p>
         : <div class='app'>
-            <User {...this.state.user} />
+            <User {...user} />
         </div>
     }
 }
