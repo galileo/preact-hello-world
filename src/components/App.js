@@ -1,18 +1,39 @@
-import { h } from 'preact'
+import { h, Component } from 'preact'
 import User from './User'
 
-const Users = [
-    {name: 'Kamil Ronewicz', image: 'https://photos-6.dropbox.com/t/2/AAA8-vGyUOohs6IFZaj8hswX5h2_8ecx2RI32kbq6P83aQ/12/8347799/png/32x32/1/_/1/2/Heroized%20Kamil%202.png/EOmXmwYYq-ECIAcoBw/XUASvWanxV3rBpqVz5Vm4_eHe-7E5vXpFC-cGZCcyMo?size=2048x1536&size_mode=5'},
-    {name: 'Kamil Ronewicz (1)', image: 'https://photos-6.dropbox.com/t/2/AAA8-vGyUOohs6IFZaj8hswX5h2_8ecx2RI32kbq6P83aQ/12/8347799/png/32x32/1/_/1/2/Heroized%20Kamil%202.png/EOmXmwYYq-ECIAcoBw/XUASvWanxV3rBpqVz5Vm4_eHe-7E5vXpFC-cGZCcyMo?size=2048x1536&size_mode=5'},
-    {name: 'Kamil Ronewicz (2)', image: 'https://photos-6.dropbox.com/t/2/AAA8-vGyUOohs6IFZaj8hswX5h2_8ecx2RI32kbq6P83aQ/12/8347799/png/32x32/1/_/1/2/Heroized%20Kamil%202.png/EOmXmwYYq-ECIAcoBw/XUASvWanxV3rBpqVz5Vm4_eHe-7E5vXpFC-cGZCcyMo?size=2048x1536&size_mode=5'}
-]
+class App extends Component {
+    constructor(props) {
+        super(props)
 
-export function App(){
-    return (
-        <div class='app'>
-            {Users.map(user => <User {...user} key={user.name} />)}
+        this.state = {
+            user: null,
+            loading: true
+        }
+    }
+
+    componentDidMount() {
+        const { urls } = this.props.config
+        const { user } = urls
+
+        fetch(user)
+            .then(res => res.json())
+            .then(({name, avatar_url}) => ({ name, image: avatar_url }))
+            .then(user => {
+                this.setState({
+                    user,
+                    loading: false
+                })
+            })
+            .catch(err => console.error(err))
+    }
+
+    render() {
+        return this.state.loading
+        ? <p>Loading, please wait ...</p>
+        : <div class='app'>
+            <User {...this.state.user} />
         </div>
-    )
+    }
 }
 
 export default App
