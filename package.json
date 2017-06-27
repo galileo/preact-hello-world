@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "linkstate": "^1.0.1",
-    "preact": "^8.1.0"
+    "preact": "^8.1.0",
+    "preact-router": "^2.5.2"
   }
 }
