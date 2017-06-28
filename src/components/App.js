@@ -1,50 +1,35 @@
 import { h, Component } from 'preact'
 import { withRouter } from 'react-router-dom'
+import { connect } from 'preact-redux'
+import { bindActionCreators } from 'redux'
 import User from './User'
+import { fetchUser } from '../actions/userActions'
 
 class App extends Component {
-  constructor (props) {
-    super(props)
-
-    this.state = {
-      user: null,
-      loading: true
-    }
-  }
-
   componentDidMount () {
-    const { urls } = this.props.config
-    const { history } = this.props
-    const apiUrl = urls.user
+    const username = this.props.match.params.username
 
-    fetch(`${apiUrl}${this.props.user}`)
-      .then(res => {
-        if (!res.ok) {
-          throw new Error('Ups... There is an API Error')
-        }
-
-        return res.json()
-      })
-      .then(({ name, avatar_url }) => ({ name, image: avatar_url }))
-      .then(user => {
-        this.setState({
-          user,
-          loading: false
-        })
-      })
-      .catch(() => {
-        console.error('Ups... API Error')
-        history.push('/')
-      })
+    this.props.fetchUser(username)
   }
 
-  render ({ config }, { loading, user }) {
+  render ({ loading, user, fetchUser }) {
     return loading
-      ? <p>Loading, please wait ... Fetching {config.urls.user}</p>
+      ? <p>Loading, please wait ... Fetching</p>
       : <div class='app'>
         <User {...user} />
       </div>
   }
 }
 
-export default withRouter(App)
+const mapStateToProps = ({loading, user}) => {
+  return {
+    loading,
+    user
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return { fetchUser: (username) => dispatch(fetchUser(username)) }
+}
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App))
