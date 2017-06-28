@@ -1,21 +1,15 @@
 import { h, render } from 'preact' 
-import Router from 'preact-router'
-import App from './components/App'
-import PrintCode from './components/PrintCode'
+import { HashRouter as Router, Switch, Route } from 'react-router-dom'
 import Home from './components/Home'
 import Profile from './components/Profile'
 import Error from './components/Error'
 
-const config = {
-    urls: {
-        user: 'https://api.github.com/users/'
-    }
-}
-
 render(<div>
-    <Router>
-        <Home path="/" />
-        <Profile path="/profile/:username" config={config} />
-        <Error default />
-    </Router>
+  <Router>
+    <Switch>
+      <Route exact path='/' component={Home} />
+      <Route path='/profile/:username' component={Profile} />
+      <Route component={Error} />
+    </Switch>
+  </Router>
 </div>, document.querySelector('main'))

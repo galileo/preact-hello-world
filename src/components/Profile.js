@@ -1,8 +1,13 @@
 import { h } from 'preact'
+import { withRouter } from 'react-router-dom'
 import App from './App'
 
-const Profile = ({username, config}) => {
-    return <App config={config} user={username} />
+const config = {
+  urls: {
+    user: 'https://api.github.com/users/'
+  }
 }
 
-export default Profile
+const Profile = ({match}) => <App config={config} user={match.params.username} />
+
+export default withRouter(Profile)

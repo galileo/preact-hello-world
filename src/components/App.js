@@ -1,5 +1,5 @@
 import { h, Component } from 'preact'
-import { route } from 'preact-router'
+import { withRouter } from 'react-router-dom'
 import User from './User'
 
 class App extends Component {
@@ -14,12 +14,13 @@ class App extends Component {
 
   componentDidMount () {
     const { urls } = this.props.config
+    const { history } = this.props
     const apiUrl = urls.user
 
     fetch(`${apiUrl}${this.props.user}`)
       .then(res => {
         if (!res.ok) {
-          throw Error('Ups... There is an API Error')
+          throw new Error('Ups... There is an API Error')
         }
 
         return res.json()
@@ -31,7 +32,10 @@ class App extends Component {
           loading: false
         })
       })
-      .catch(() => route('/'))
+      .catch(() => {
+        console.error('Ups... API Error')
+        history.push('/')
+      })
   }
 
   render ({ config }, { loading, user }) {
@@ -43,4 +47,4 @@ class App extends Component {
   }
 }
 
-export default App
+export default withRouter(App)
