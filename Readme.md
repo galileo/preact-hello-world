@@ -1,1 +1,1 @@
-Hello world app where I for my preact researches.
+Hello world app where I do my preact researches.
